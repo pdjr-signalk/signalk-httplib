@@ -65,6 +65,7 @@ module.exports = class HttpInterface {
       } else {
         return(await new Promise((resolve, reject) => {
           fetch(`${this.serverAddress}/signalk`, { method: 'GET' }).then((response) => {
+            console.log(JSON.stringify(response));
             if (response.status == 200) {
               response.json().then((json) => {
                 resolve(this.serverInfo = json);
