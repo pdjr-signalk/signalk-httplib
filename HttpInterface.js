@@ -34,7 +34,7 @@ module.exports = class HttpInterface {
     } else {
       return(await new Promise((resolve, reject) => {
         bonjour.find({ type: 'https' }, (service) => {
-          if (service.txt.self === uuid) this.serverAddress = "https://" + service.addresses[0] + ":" + service.port;
+          if (service.txt.self === this.uuid) this.serverAddress = "https://" + service.addresses[0] + ":" + service.port;
         });
   
         setTimeout(() => {                                  // wait for 5 seconds, then...
@@ -42,7 +42,7 @@ module.exports = class HttpInterface {
             resolve(this.serverAddress);
           } else {
             bonjour.find({ type: "http" }, (service) => {
-              if (service.txt.self === uuid) this.serverAddress = "http://" + service.addresses[0] + ":" + service.port;
+              if (service.txt.self === this.uuid) this.serverAddress = "http://" + service.addresses[0] + ":" + service.port;
             });
             setTimeout(() => {                              // wait for 5 seconds, then...
               bonjour.destroy();
