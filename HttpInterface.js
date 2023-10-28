@@ -58,7 +58,7 @@ module.exports = class HttpInterface {
     }
   }
 
-  async getserverInfo() {
+  async getServerInfo() {
     if (this.serverInfo !== null) {
       return(this.serverInfo);
     } else {
