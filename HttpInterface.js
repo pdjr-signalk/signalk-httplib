@@ -88,6 +88,7 @@ module.exports = class HttpInterface {
       } else {
         const serverInfo = this.getServerInfo();
         return(await new Promise((resolve, reject) => {
+          console.log(">>>> %s", Object.keys(this.serverInfo.endpoints)[0]);
           fetch(`${this.serverAddress}/signalk/${Object.keys(this.serverInfo.endpoints)[0]}/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: username, password: password })}).then((response) => {
             if (response.status == 200) {
               response.json().then((json) => {
