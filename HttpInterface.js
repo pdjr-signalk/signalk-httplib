@@ -62,20 +62,21 @@ module.exports = class HttpInterface {
     if (this.serverInfo !== null) {
       return(this.serverInfo);
     } else {
-      const serverAddress = this.getServerAddress();
-      return(await new Promise((resolve, reject) => {
-        fetch(`${serverAddress}/signalk`, { method: 'GET' }).then((response) => {
-          if (response.status == 200) {
-            response.json().then((json) => {
-              resolve(this.serverInfo = json);
-            })
-          }
-        })
-      }).then(() => {
-        if (this.serverInfo) {
-          return(this.serverInfo);
-        } else throw new Error("couldn't get server info");
-      }));
+      this.getServerAddress().then(async (serverAddress) => {
+        return(await new Promise((resolve, reject) => {
+          fetch(`${serverAddress}/signalk`, { method: 'GET' }).then((response) => {
+            if (response.status == 200) {
+              response.json().then((json) => {
+                resolve(this.serverInfo = json);
+              })
+            }
+          })
+        }).then(() => {
+          if (this.serverInfo) {
+            return(this.serverInfo);
+          } else throw new Error("couldn't get server info");
+        }));
+      });
     }
   }
 
