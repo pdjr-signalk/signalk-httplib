@@ -18,7 +18,7 @@
 
 const bonjour = require('bonjour')();
 
-module.exports = class HttpInterface {
+export default class HttpInterface {
 
   constructor(uuid, timeout=5) {
     this.uuid = uuid;
@@ -26,7 +26,6 @@ module.exports = class HttpInterface {
     this.serverAddress = null;
     this.serverInfo = null;
     this.token = null;
-   
   }
 
   async getServerAddress() {

@@ -1,0 +1,22 @@
+{
+  "name": "signalk-libhttpinterface",
+  "version": "1.0.0",
+  "description": "Library providing access to Signal K HTTP interface.",
+  "main": "HttpInterface.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdjr-signalk/signalk-libhttpinterface.git"
+  },
+  "author": "Paul Reeve <preeve_at_pdjr_dot_eu>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/pdjr-signalk/signalk-libhttpinterface/issues"
+  },
+  "homepage": "https://github.com/pdjr-signalk/signalk-libhttpinterface#readme",
+  "dependencies": {
+    "bonjour": "^3.5.0"
+  }
+}
