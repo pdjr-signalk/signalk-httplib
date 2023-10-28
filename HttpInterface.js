@@ -81,7 +81,7 @@ module.exports = class HttpInterface {
     } else throw new Error("call getServerAdderess() before using this function");
   }
 
-  async getAuthenticationToken(serverAddress, apiVersion, username, password) {
+  async getAuthenticationToken(username, password) {
     if (this.serverInfo) {
       if (this.token !== null) {
         return(this.token);
