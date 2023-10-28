@@ -18,7 +18,7 @@
 
 const bonjour = require('bonjour')();
 
-export default class HttpInterface {
+module.exports = class HttpInterface {
 
   constructor(uuid, timeout=5) {
     this.uuid = uuid;
