@@ -59,12 +59,12 @@ module.exports = class HttpInterface {
   }
 
   async getServerInfo() {
-    if (this.serverInfo !== null) {
-      return(this.serverInfo);
-    } else {
-      this.getServerAddress().then(async (serverAddress) => {
+    if (this.serverAddress) {
+      if (this.serverInfo !== null) {
+        return(this.serverInfo);
+      } else {
         return(await new Promise((resolve, reject) => {
-          fetch(`${serverAddress}/signalk`, { method: 'GET' }).then((response) => {
+          fetch(`${this.serverAddress}/signalk`, { method: 'GET' }).then((response) => {
             if (response.status == 200) {
               response.json().then((json) => {
                 resolve(this.serverInfo = json);
@@ -76,29 +76,31 @@ module.exports = class HttpInterface {
             return(this.serverInfo);
           } else throw new Error("couldn't get server info");
         }));
-      });
-    }
+      }
+    } else throw new Error("call getServerAdderess() before using this function");
   }
 
   async getAuthenticationToken(serverAddress, apiVersion, username, password) {
-    if (this.token !== null) {
-      return(this.token);
-    } else {
-      const serverInfo = this.getserverInfo();
-      return(await new Promise((resolve, reject) => {
-        fetch(`${serverAddress}/signalk/${Object.keys(serverInfo.endpoints)[0]}/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: username, password: password })}).then((response) => {
-          if (response.status == 200) {
-            response.json().then((json) => {
-              resolve(this.token = json.token);
-            })
-          }
-        })
-      }).then(() => {
-        if (this.token) {
-          return(this.token);
-        } else throw new Error("couldn't get authentication token");
-      }));
-    }
+    if (this.serverInfo) {
+      if (this.token !== null) {
+        return(this.token);
+      } else {
+        const serverInfo = this.getServerInfo();
+        return(await new Promise((resolve, reject) => {
+          fetch(`${this.serverAddress}/signalk/${Object.keys(this.serverInfo.endpoints)[0]}/auth/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ username: username, password: password })}).then((response) => {
+            if (response.status == 200) {
+              response.json().then((json) => {
+                resolve(this.token = json.token);
+              })
+            }
+          })
+        }).then(() => {
+          if (this.token) {
+            return(this.token);
+          } else throw new Error("couldn't get authentication token");
+        }));
+      }
+    } else throw new Error("call getServerInfo() before using this function");
   }
   
 }
