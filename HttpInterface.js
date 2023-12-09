@@ -45,7 +45,7 @@ module.exports = class HttpInterface {
               if (service.txt.self === this.uuid) {
                 var v4Addresses = service.addresses.filter(a => isV4Address(a));
                 if (v4Addresses.length > 0) this.serverAddress = "http://" + v4addresses[0] + ":" + service.port;
-            });
+            }
             setTimeout(() => {                              // wait for 5 seconds, then...
               bonjour.destroy();
               resolve(this.serverAddress);                            // destroy bonjour instance
