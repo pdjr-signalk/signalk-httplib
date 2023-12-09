@@ -34,7 +34,10 @@ module.exports = class HttpInterface {
     } else {
       return(await new Promise((resolve, reject) => {
         bonjour.find({ type: 'https' }, (service) => {
-          if (service.txt.self === this.uuid) this.serverAddress = "https://" + service.addresses[0] + ":" + service.port;
+          if (service.txt.self === this.uuid) {
+            var v4Addresses = service.addresses.filter(a => isV4Address(a));
+            if (v4Addresses.length > 0) this.serverAddress = "https://" + v4Addresses[0] + ":" + service.port;
+          }
         });
   
         setTimeout(
