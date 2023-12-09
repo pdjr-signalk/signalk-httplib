@@ -37,21 +37,22 @@ module.exports = class HttpInterface {
           if (service.txt.self === this.uuid) this.serverAddress = "https://" + service.addresses[0] + ":" + service.port;
         });
   
-        setTimeout(() => {                                  // wait for 5 seconds, then...
-          if (this.serverAddress != null) {
-            resolve(this.serverAddress);
-          } else {
-            bonjour.find({ type: "http" }, (service) => {
-              if (service.txt.self === this.uuid) {
-                var v4Addresses = service.addresses.filter(a => isV4Address(a));
-                if (v4Addresses.length > 0) this.serverAddress = "http://" + v4addresses[0] + ":" + service.port;
+        setTimeout(
+          () => {                                  // wait for 5 seconds, then...
+            if (this.serverAddress != null) {
+              resolve(this.serverAddress);
+            } else {
+              bonjour.find({ type: "http" }, (service) => {
+                if (service.txt.self === this.uuid) {
+                  var v4Addresses = service.addresses.filter(a => isV4Address(a));
+                  if (v4Addresses.length > 0) this.serverAddress = "http://" + v4addresses[0] + ":" + service.port;
+                }
+              });
+              setTimeout(() => { bonjour.destroy(); resolve(this.serverAddress); }, (this.timeout * 1000));    
             }
-            setTimeout(() => {                              // wait for 5 seconds, then...
-              bonjour.destroy();
-              resolve(this.serverAddress);                            // destroy bonjour instance
-            }, this.timeout * 1000);    
-          }
-        }, (this.timeout * 1000));
+          },
+          (this.timeout * 1000)
+        );
       }).then(() => {
         if (this.serverAddress) {
           return(this.serverAddress);
