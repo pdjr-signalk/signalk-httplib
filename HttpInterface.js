@@ -46,6 +46,7 @@ module.exports = class HttpInterface {
               resolve(this.serverAddress);
             } else {
               bonjour.find({ type: "http" }, (service) => {
+                console.log(JSON.stringify(service, null, 2));
                 if (service.txt.self === this.uuid) {
                   var v4Addresses = service.addresses.filter(a => isV4Address(a));
                   if (v4Addresses.length > 0) this.serverAddress = "http://" + v4Addresses[0] + ":" + service.port;
