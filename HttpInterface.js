@@ -45,7 +45,7 @@ module.exports = class HttpInterface {
               bonjour.find({ type: "http" }, (service) => {
                 if (service.txt.self === this.uuid) {
                   var v4Addresses = service.addresses.filter(a => isV4Address(a));
-                  if (v4Addresses.length > 0) this.serverAddress = "http://" + v4addresses[0] + ":" + service.port;
+                  if (v4Addresses.length > 0) this.serverAddress = "http://" + v4Addresses[0] + ":" + service.port;
                 }
               });
               setTimeout(() => { bonjour.destroy(); resolve(this.serverAddress); }, (this.timeout * 1000));    
