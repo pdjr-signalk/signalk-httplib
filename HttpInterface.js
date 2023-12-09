@@ -42,7 +42,9 @@ module.exports = class HttpInterface {
             resolve(this.serverAddress);
           } else {
             bonjour.find({ type: "http" }, (service) => {
-              if (service.txt.self === this.uuid) this.serverAddress = "http://" + service.addresses[0] + ":" + service.port;
+              if (service.txt.self === this.uuid) {
+                var v4Addresses = service.addresses.filter(a => isV4Address(a));
+                if (v4Addresses.length > 0) this.serverAddress = "http://" + v4addresses[0] + ":" + service.port;
             });
             setTimeout(() => {                              // wait for 5 seconds, then...
               bonjour.destroy();
@@ -55,6 +57,11 @@ module.exports = class HttpInterface {
           return(this.serverAddress);
         } else throw new Error("couldn't get server address");
       }));
+    }
+
+    function isV4Address(address) {
+      var matches;
+      return((matches = address.match(/^(\d+).\d+.\d+.\d+$/)) && (matches[0] != '127'));
     }
   }
 
