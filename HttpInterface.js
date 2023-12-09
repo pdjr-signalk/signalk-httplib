@@ -62,6 +62,7 @@ module.exports = class HttpInterface {
 
     function isV4Address(address) {
       var matches;
+      console.log(JSON.stringify(address));
       return((matches = address.match(/^(\d+).\d+.\d+.\d+$/)) && (matches[0] != '127'));
     }
   }
