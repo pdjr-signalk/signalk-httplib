@@ -33,7 +33,7 @@ module.exports = class HttpInterface {
    * Return the host's Version 4 IP address, disregarding the localhost
    * address or throw and exception if the address cannot be retrieved.
    */
-  function getHostIpAddress() {
+  getHostIpAddress = function() {
     if (!this.serverAddress) {
       const nets = networkInterfaces();
       for (const name of Object.keys(nets)) {
@@ -89,7 +89,7 @@ module.exports = class HttpInterface {
     }
   }
 
-  function isPrivateAddress(address) {
+  isPrivateAddress = function(address) {
     var parts = ipAddress.split('.').map(n => parseInt(n));
     if (parts.length != 4) throw new Error("invalid IP address");
     if ((parts[0] == 192) && (parts[1] == 168)) return(true);
@@ -103,7 +103,7 @@ module.exports = class HttpInterface {
    * ensure that they fall within the same private subnet as
    * <ipAddress> or throw an exception. 
    */
-  function getPrivateAddressRegExp(ipAddress) {
+  getPrivateAddressRegExp = function(ipAddress) {
     var parts = ipAddress.split('.').map(n => parseInt(n));
     if (parts.length != 4) throw new Error("invalid IP address");
     if ((parts[0] == 192) && (parts[1] == 168)) return(new RegExp('^192\\.168\\.\\d+\\.\\d+$'));
