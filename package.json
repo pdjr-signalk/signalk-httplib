@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/pdjr-signalk/signalk-libhttpinterface#readme",
   "dependencies": {
-    "bonjour": "^3.5.0"
+    "bonjour": "^3.5.0",
+    "os": "^0.1.2"
   }
 }
