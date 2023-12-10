@@ -16,6 +16,7 @@
  * permissions and limitations under the License.
  */
 
+const { networkInterfaces } = require('os');
 const bonjour = require('bonjour')();
 
 module.exports = class HttpInterface {
@@ -26,6 +27,23 @@ module.exports = class HttpInterface {
     this.serverAddress = null;
     this.serverInfo = null;
     this.token = null;
+  }
+
+  /********************************************************************
+   * Return the host's Version 4 IP address, disregarding the localhost
+   * address or throw and exception if the address cannot be retrieved.
+   */
+  function getHostIpAddress() {
+    if (!this.serverAddress) {
+      const nets = networkInterfaces();
+      for (const name of Object.keys(nets)) {
+        for (const net of nets[name]) {
+          const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
+          if ((net.family === familyV4Value) && (!net.internal)) this.serverAddress = net.address;
+        }
+      }
+    }
+    return(this.serverAddress);
   }
 
   async getServerAddress() {
@@ -71,6 +89,29 @@ module.exports = class HttpInterface {
     }
   }
 
+  function isPrivateAddress(address) {
+    var parts = ipAddress.split('.').map(n => parseInt(n));
+    if (parts.length != 4) throw new Error("invalid IP address");
+    if ((parts[0] == 192) && (parts[1] == 168)) return(true);
+    if ((parts[0] == 172) && (parts[1] >= 16) && (parts[1] <= 31)) return(true);
+    if (parts[0] == 10) return(true);
+    return(false);
+  }
+
+  /********************************************************************
+   * Get a RegExp object that can be used to filter IP addresses to
+   * ensure that they fall within the same private subnet as
+   * <ipAddress> or throw an exception. 
+   */
+  function getPrivateAddressRegExp(ipAddress) {
+    var parts = ipAddress.split('.').map(n => parseInt(n));
+    if (parts.length != 4) throw new Error("invalid IP address");
+    if ((parts[0] == 192) && (parts[1] == 168)) return(new RegExp('^192\\.168\\.\\d+\\.\\d+$'));
+    if ((parts[0] == 172) && (parts[1] >= 16) && (parts[1] <= 31)) return(new RegExp('^172\\.16\\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\\.\\d+\\.\\d+$'));
+    if (parts[0] == 10) return(new RegExp('^10\\.\\d+\\.\\d+\\.\\d+$'));
+    throw new Error("IP address is public");
+  }
+  
   async getServerInfo() {
     if (this.serverAddress) {
       if (this.serverInfo !== null) {
