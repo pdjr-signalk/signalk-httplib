@@ -109,7 +109,7 @@ module.exports = class HttpInterface {
     if ((parts[0] == 192) && (parts[1] == 168)) return(new RegExp('^192\\.168\\.\\d+\\.\\d+$'));
     if ((parts[0] == 172) && (parts[1] >= 16) && (parts[1] <= 31)) return(new RegExp('^172\\.16\\.(16|17|18|19|20|21|22|23|24|25|26|27|28|29|30|31)\\.\\d+\\.\\d+$'));
     if (parts[0] == 10) return(new RegExp('^10\\.\\d+\\.\\d+\\.\\d+$'));
-    throw new Error("IP address is public");
+    throw new Error(`IP address ${ipAddress} is public`);
   }
   
   async getServerInfo() {
