@@ -24,26 +24,28 @@ module.exports = class HttpInterface {
   constructor(uuid, timeout=5) {
     this.uuid = uuid;
     this.timeout = timeout;
-    this.serverAddress = null;
-    this.serverInfo = null;
-    this.token = null;
+    this.serverAddress = undefined;
+    this.serverInfo = undefined;
+    this.token = undefined;
   }
 
   /********************************************************************
-   * Return the host's Version 4 IP address, disregarding the localhost
-   * address or throw and exception if the address cannot be retrieved.
+   * Return the host's Version 4 IP address or undefined if no address
+   * is configured. The localhost address and link-local addresses are
+   * ignored.
    */
   getHostIpAddress = function() {
-    if (!this.serverAddress) {
-      const nets = networkInterfaces();
-      for (const name of Object.keys(nets)) {
-        for (const net of nets[name]) {
-          const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
-          if ((net.family === familyV4Value) && (!net.internal) && (!net.address.startsWith('169.254.'))) this.serverAddress = net.address;
+    if (this.serverAddress) return(this.serverAddress);
+    const nets = networkInterfaces();
+    for (const name of Object.keys(nets)) {
+      for (const net of nets[name]) {
+        const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4
+        if ((net.family === familyV4Value) && (!net.internal) && (!net.address.startsWith('169.254.'))) {
+          return(this.serverAddress = net.address);
         }
       }
     }
-    return(this.serverAddress);
+    throw new Error("address not found");
   }
 
   async getServerAddress() {
