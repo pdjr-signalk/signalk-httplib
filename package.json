@@ -4,7 +4,10 @@
   "description": "Library providing access to Signal K HTTP interface.",
   "main": "HttpInterface.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "yq -o=json -I=2 resources/openApi.yaml > resources/openApi.json",
+    "test": "echo \"Error: no test specified\"",
+    "build": "tsc",
+    "prepare": "tsc"
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,7 @@
   },
   "homepage": "https://github.com/pdjr-signalk/signalk-libhttpinterface#readme",
   "dependencies": {
+    "@types/node": "^22.5.5",
     "bonjour": "^3.5.0",
     "os": "^0.1.2"
   }
