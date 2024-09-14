@@ -27,6 +27,14 @@ class HttpInterface {
   serverInfo: any
   token: any
 
+  /********************************************************************
+   * Create a new HttpInterface instance by specifying the UUID of the
+   * service required of the interface and a timeout that should be
+   * used when making Bonjour requests of service availability.
+   * 
+   * @param uuid - identifier of the required interface service.
+   * @param timeout - used to control Bonjour's network interrogation.
+   */
   constructor(uuid: string, timeout: number = 5) {
     this.uuid = uuid;
     this.timeout = timeout;
@@ -39,6 +47,8 @@ class HttpInterface {
    * Return the host's Version 4 IP address or undefined if no address
    * is configured. The localhost address and link-local addresses are
    * ignored.
+   * 
+   * @return the host IP address.
    */
   getHostIpAddress(): string {
     if (this.serverAddress) return(this.serverAddress);
@@ -55,6 +65,17 @@ class HttpInterface {
     throw new Error("address not found");
   }
 
+  /********************************************************************
+   * Return the V4 IP address of the server on the local network which
+   * provides the service identified by the UUID specified in this
+   * instance.
+   * 
+   * A search is made initially for https services, falling back into
+   * a search for http services after the timeout configured in this
+   * instance.
+   * 
+   * @return the IP address of the first discovered service provider.
+   */
   async getServerAddress(): Promise<string> {
     if (this.serverAddress !== null) return(this.serverAddress);
 
