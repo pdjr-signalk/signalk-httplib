@@ -23,9 +23,9 @@ export class HttpInterface {
 
   private uuid: string
   private timeout: number
-  private serverAddress: any
-  private serverInfo: any
-  private token: any
+  private serverAddress?: string
+  private serverInfo?: any
+  private token?: string
 
   /********************************************************************
    * Create a new HttpInterface instance by specifying the UUID of the
@@ -77,7 +77,7 @@ export class HttpInterface {
    * @return the IP address of the first discovered service provider.
    */
   async getServerAddress(): Promise<string> {
-    if (this.serverAddress !== null) return(this.serverAddress);
+    if (this.serverAddress) return(this.serverAddress);
 
     const bonjour = new Bonjour();
 
@@ -163,9 +163,9 @@ export class HttpInterface {
     } else throw new Error("call getServerAdderess() before using this function");
   }
 
-  async getAuthenticationToken(username: string, password: string): Promise<any> {
+  async getAuthenticationToken(username: string, password: string): Promise<string> {
     if (this.serverInfo) {
-      if (this.token !== null) {
+      if (this.token) {
         return(this.token);
       } else {
         const serverInfo: any = this.getServerInfo();
@@ -185,5 +185,4 @@ export class HttpInterface {
       }
     } else throw new Error("call getServerInfo() before using this function");
   }
-  
 }

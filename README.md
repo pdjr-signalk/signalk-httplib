@@ -6,6 +6,6 @@ the local host and, more usefully, the HTTP interface on a network
 host providing a particular service published over Bonjour.
 
 This allows, the recovery of service host IP address, detailed service
-host information and remote access token.
+host information and any available remote access token.
 
 ```myHttpInterface = new HttpInterface(serviceUuid)```
