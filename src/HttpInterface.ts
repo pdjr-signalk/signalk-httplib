@@ -14,18 +14,18 @@
  * permissions and limitations under the License.
  */
 
-const { networkInterfaces } = require('os');
-const bonjour = require('bonjour')();
+import { NetworkInterfaceInfo, networkInterfaces } from 'os'
+import  Bonjour from 'bonjour-service'
 
 type Nullable<T> = T | null
 
-class HttpInterface {
+export class HttpInterface {
 
-  uuid: string
-  timeout: number
-  serverAddress: any
-  serverInfo: any
-  token: any
+  private uuid: string
+  private timeout: number
+  private serverAddress: any
+  private serverInfo: any
+  private token: any
 
   /********************************************************************
    * Create a new HttpInterface instance by specifying the UUID of the
@@ -53,14 +53,14 @@ class HttpInterface {
   getHostIpAddress(): string {
     if (this.serverAddress) return(this.serverAddress);
 
-    const ifaces: { name: string, addresses: any[] } = networkInterfaces();
-    for (const [ name, addresses ] of Object.entries(ifaces)) {
-      for (const address of addresses) {
+    const ifaces: NodeJS.Dict<NetworkInterfaceInfo[]> = networkInterfaces();
+    for (let key in ifaces) {
+      ifaces[key]?.forEach((address) => {
         const familyV4Value = typeof address.family === 'string' ? 'IPv4' : 4
         if ((address.family === familyV4Value) && (!address.internal) && (!address.address.startsWith('169.254.'))) {
           return(this.serverAddress = address.address);
         }
-      }
+      })
     }
     throw new Error("address not found");
   }
@@ -78,6 +78,8 @@ class HttpInterface {
    */
   async getServerAddress(): Promise<string> {
     if (this.serverAddress !== null) return(this.serverAddress);
+
+    const bonjour = new Bonjour();
 
     return(await new Promise((resolve, reject) => {
       bonjour.find({ type: 'https' }, (service: any) => {
