@@ -21,6 +21,7 @@ type Nullable<T> = T | null
 
 export class HttpInterface {
 
+  private app: any
   private uuid: string
   private timeout: number
   private serverAddress?: string
@@ -36,11 +37,16 @@ export class HttpInterface {
    * @param timeout - used to control Bonjour's network interrogation.
    */
   constructor(uuid: string, timeout: number = 5) {
-    this.uuid = uuid;
-    this.timeout = timeout;
-    this.serverAddress = undefined;
-    this.serverInfo = undefined;
-    this.token = undefined;
+    this.uuid = uuid
+    this.timeout = timeout
+    this.app = null
+    this.serverAddress = undefined
+    this.serverInfo = undefined
+    this.token = undefined
+  }
+
+  linkSK(app: any) {
+    this.app = app
   }
 
   /********************************************************************
@@ -58,6 +64,7 @@ export class HttpInterface {
       ifaces[key]?.forEach((address) => {
         const familyV4Value = typeof address.family === 'string' ? 'IPv4' : 4
         if ((address.family === familyV4Value) && (!address.internal) && (!address.address.startsWith('169.254.'))) {
+          if (this.app) this.app.debug(`returning host IP address '${address.address}'`)
           return(this.serverAddress = address.address);
         }
       })
@@ -92,10 +99,10 @@ export class HttpInterface {
       setTimeout(
         () => {                                  // wait for 5 seconds, then...
           if (this.serverAddress != null) {
+            if (this.app) this.app.debug(`returning server address '${this.serverAddress}'`)
             resolve(this.serverAddress);
           } else {
             bonjour.find({ type: "http" }, (service: any) => {
-              console.log(JSON.stringify(service, null, 2));
               if (service.txt.self === this.uuid) {
                 var v4Addresses = service.addresses.filter((a: string) => isV4Address(a));
                 if (v4Addresses.length > 0) this.serverAddress = "http://" + v4Addresses[0] + ":" + service.port;
@@ -108,6 +115,7 @@ export class HttpInterface {
       );
     }).then(() => {
       if (this.serverAddress) {
+        if (this.app) this.app.debug(`returning server address '${this.serverAddress}'`)
         return(this.serverAddress);
       } else throw new Error("couldn't get server address");
     }));
