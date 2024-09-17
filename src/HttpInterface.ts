@@ -57,7 +57,7 @@ export class HttpInterface {
    * @return the host IP address.
    */
   getHostIpAddress(): string {
-    if (this.serverAddress) return(this.serverAddress);
+    if (this.serverAddress !== undefined) return(this.serverAddress);
 
     const ifaces: NodeJS.Dict<NetworkInterfaceInfo[]> = networkInterfaces();
     for (let key in ifaces) {
@@ -84,7 +84,7 @@ export class HttpInterface {
    * @return the IP address of the first discovered service provider.
    */
   async getServerAddress(): Promise<string> {
-    if (this.serverAddress) return(this.serverAddress);
+    if (this.serverAddress !== undefined) return(this.serverAddress);
 
     const bonjour = new Bonjour();
 
@@ -98,7 +98,7 @@ export class HttpInterface {
   
       setTimeout(
         () => {                                  // wait for 5 seconds, then...
-          if (this.serverAddress != null) {
+          if (this.serverAddress !== undefined) {
             if (this.app) this.app.debug(`returning server address '${this.serverAddress}'`)
             resolve(this.serverAddress);
           } else {
@@ -114,7 +114,7 @@ export class HttpInterface {
         (this.timeout * 1000)
       );
     }).then(() => {
-      if (this.serverAddress) {
+      if (this.serverAddress !== undefined) {
         if (this.app) this.app.debug(`returning server address '${this.serverAddress}'`)
         return(this.serverAddress);
       } else throw new Error("couldn't get server address");
@@ -150,8 +150,8 @@ export class HttpInterface {
   }
   
   async getServerInfo(): Promise<any> {
-    if (this.serverAddress) {
-      if (this.serverInfo !== null) {
+    if (this.serverAddress !== undefined) {
+      if (this.serverInfo !== undefined) {
         return(this.serverInfo);
       } else {
         return(await new Promise((resolve, reject) => {
@@ -163,7 +163,7 @@ export class HttpInterface {
             }
           })
         }).then(() => {
-          if (this.serverInfo) {
+          if (this.serverInfo !== undefined) {
             return(this.serverInfo);
           } else throw new Error("couldn't get server info");
         }));
@@ -172,8 +172,8 @@ export class HttpInterface {
   }
 
   async getAuthenticationToken(username: string, password: string): Promise<string> {
-    if (this.serverInfo) {
-      if (this.token) {
+    if (this.serverInfo !== undefined) {
+      if (this.token !== undefined) {
         return(this.token);
       } else {
         const serverInfo: any = this.getServerInfo();
@@ -186,7 +186,7 @@ export class HttpInterface {
             }
           })
         }).then(() => {
-          if (this.token) {
+          if (this.token !== undefined) {
             return(this.token);
           } else throw new Error("couldn't get authentication token");
         }));
