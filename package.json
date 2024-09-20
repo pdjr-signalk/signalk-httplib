@@ -2,9 +2,14 @@
   "name": "signalk-libhttpinterface",
   "version": "1.0.0",
   "description": "Library providing access to Signal K HTTP interface.",
-  "main": "HttpInterface.js",
+  "main": "dist/HttpInterface.js",
+  "types": "dist/HttpInterface.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "publish": "yq -o=json -I=2 resources/openApi.yaml > resources/openApi.json",
+    "test": "echo \"Error: no test specified\"",
+    "build": "tsc",
+    "prepare": "tsc",
+    "pack": "npm pack"
   },
   "repository": {
     "type": "git",
@@ -17,7 +22,10 @@
   },
   "homepage": "https://github.com/pdjr-signalk/signalk-libhttpinterface#readme",
   "dependencies": {
-    "bonjour": "^3.5.0",
+    "bonjour-service": "^1.2.1",
     "os": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.5"
   }
 }
