@@ -15,7 +15,7 @@
  */
 
 import { NetworkInterfaceInfo, networkInterfaces } from 'os'
-import  Bonjour from 'bonjour-service'
+import { Bonjour } from 'bonjour-service'
 
 type Nullable<T> = T | null
 
